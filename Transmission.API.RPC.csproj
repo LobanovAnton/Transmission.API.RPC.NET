@@ -1,0 +1,54 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <OutputType>Library</OutputType>
+        <PackageIcon>Transmission.png</PackageIcon>
+        <Version>4.1.1</Version>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageId>Transmission.API.RPC.NET</PackageId>
+        <Title>Transmission API RPC for .NET 10</Title>
+        <Authors>Beatlegger, Lobanov</Authors>
+        <Description>Client for Transmission API</Description>
+        <Copyright>Copyright 2026</Copyright>
+        <PackageTags>Transmission RPC NET10</PackageTags>
+        <PackageReleaseNotes>
+4.1.1
+• Fix type mismatch of field SequentialDownload in SessionInfo
+
+4.1.0 
+• The version corresponds to the minimum supported server 
+• Support JSON-RPC 2.0
+• Added GroupSet, GroupGet methods. 
+• Added TorrentReannonce methods
+• Added TorrentFields - Avalabilty, BytesCompleted, Group, SequentialDownload, SequentialDownloadFromPiece, BeginPiece, EndPiece
+• Added SessionFields - BlocklistSize, ScriptTorrentAddedEnabled, ScriptTorrentAddedFilename, 
+  ScriptTorrentDoneSeedingEnabled, ScriptTorrentDoneSeedingFilename, SequentialDownload, RpcVersionSemVer
+• Added TransmissionTorrentPeers - IsIncoming, PeerId
+• Added TransmissionTorrentPeersFrom - FromCache
+• Added TransmissionTorrentTrackerStats - DownloaderCount, SiteName
+            
+2.2.2
+• Use IHttpClientFactory instead of create new HttpClient for every request
+• Added string[] fields as parameter to function GetSessionInformation
+• Added static class SessionFields
+
+2.2.0
+• Porting the project to .Net 10.
+• Using System.Text.Json instead of Newtonsoft Json.NET.
+• Support for server version 4.1.0
+        </PackageReleaseNotes>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <None Include="Transmission.png" Pack="true" PackagePath="" />
+        <None Include="README.md" Pack="true" PackagePath="" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.Extensions.Http" Version="10.0.2" />
+    </ItemGroup>
+
+</Project>
