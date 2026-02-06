@@ -1,4 +1,4 @@
-namespace Transmission.API.RPC.Arguments;
+namespace Transmission.API.RPC.Params;
 
 public static class SessionFields
 {

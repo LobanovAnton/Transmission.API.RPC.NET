@@ -14,6 +14,7 @@ namespace Transmission.API.RPC.Utils;
 [JsonSerializable(typeof(FreeSpace))]
 [JsonSerializable(typeof(PortTest))]
 [JsonSerializable(typeof(BlockList))]
+[JsonSerializable(typeof(TransmissionRequest))]
 [JsonSerializable(typeof(TransmissionResponse))]
 internal partial class SourceGenerationContext : JsonSerializerContext
 {

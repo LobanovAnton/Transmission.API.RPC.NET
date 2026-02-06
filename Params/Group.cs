@@ -1,8 +1,8 @@
 using Transmission.API.RPC.Common;
 
-namespace Transmission.API.RPC.Arguments;
+namespace Transmission.API.RPC.Params;
 
-public class Group: ParamsBase
+public class Group: Parameters
 {
     public bool? HonorSessionLimit
     {

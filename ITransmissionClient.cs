@@ -1,5 +1,5 @@
-﻿using Transmission.API.RPC.Arguments;
-using Transmission.API.RPC.Entity;
+﻿using Transmission.API.RPC.Entity;
+using Transmission.API.RPC.Params;
 
 namespace Transmission.API.RPC
 {
