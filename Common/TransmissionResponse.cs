@@ -3,13 +3,13 @@ using System.Text.Json.Serialization;
 
 namespace Transmission.API.RPC.Common;
 
-public class ErrorData
+internal class ErrorData
 {
 	[JsonPropertyName("error_string")]
 	public string ErrorString { get; set; }
 }
 	
-public class TransmissionError
+internal class TransmissionError
 {
 	[JsonPropertyName("code")]
 	public int Code { get; set; }
@@ -24,7 +24,7 @@ public class TransmissionError
 /// <summary>
 /// Transmission response 
 /// </summary>
-public class TransmissionResponse : CommunicateBase
+internal class TransmissionResponse : CommunicateBase
 {
 	[JsonPropertyName("error")] 
 	[JsonInclude]

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 
-namespace Transmission.API.RPC
+namespace Transmission.API.RPC.Utils
 {
     /// <summary>
     /// Async extension
     /// </summary>
-    public static class AsyncExtensions
+    internal static class AsyncExtensions
     {
         /// <summary>
         /// Wait and unwrap exception

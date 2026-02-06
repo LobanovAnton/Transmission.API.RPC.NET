@@ -5,7 +5,7 @@ namespace Transmission.API.RPC.Common;
 /// <summary>
 /// Base class for request/response
 /// </summary>
-public abstract class CommunicateBase
+internal abstract class CommunicateBase
 {
     [JsonPropertyName("jsonrpc")] 
     [JsonInclude]

@@ -5,7 +5,7 @@ namespace Transmission.API.RPC.Common;
 /// <summary>
 /// Transmission request 
 /// </summary>
-public class TransmissionRequest : CommunicateBase
+internal class TransmissionRequest : CommunicateBase
 {
 	/// <summary>
 	/// Name of the method to invoke

@@ -52,27 +52,27 @@ public class NewTorrent : Parameters
     /// <summary>
     /// if true, don't start the torrent
     /// </summary>
-    public bool? Paused
+    public bool Paused
     {
-        get => GetValue<bool?>(ApiFields.PAUSED);
+        get => GetValue<bool>(ApiFields.PAUSED);
         set => this[ApiFields.PAUSED] = value;
     }
 
     /// <summary>
     /// maximum number of peers
     /// </summary>
-    public int? PeerLimit
+    public int PeerLimit
     {
-        get => GetValue<int?>(TorrentFields.PEER_LIMIT);
+        get => GetValue<int>(TorrentFields.PEER_LIMIT);
         set => this[TorrentFields.PEER_LIMIT] = value;
     }
 
     /// <summary>
     /// Torrent's bandwidth priority
     /// </summary>
-    public int? BandwidthPriority
+    public int BandwidthPriority
     {
-        get => GetValue<int?>(TorrentFields.BANDWIDTH_PRIORITY);
+        get => GetValue<int>(TorrentFields.BANDWIDTH_PRIORITY);
         set => this[TorrentFields.BANDWIDTH_PRIORITY] = value;
     }
 
@@ -121,15 +121,15 @@ public class NewTorrent : Parameters
         set => this[ApiFields.PRIORITY_NORMAL] = value;
     }
         
-    public bool? SequentialDownload
+    public bool SequentialDownload
     {
-        get => GetValue<bool?>(TorrentFields.SEQUENTIAL_DOWNLOAD);
+        get => GetValue<bool>(TorrentFields.SEQUENTIAL_DOWNLOAD);
         set => this[TorrentFields.SEQUENTIAL_DOWNLOAD] = value;
     }
 
-    public int? SequentialDownloadFromPiece
+    public int SequentialDownloadFromPiece
     {
-        get => GetValue<int?>(TorrentFields.SEQUENTIAL_DOWNLOAD_FROM_PIECE);
+        get => GetValue<int>(TorrentFields.SEQUENTIAL_DOWNLOAD_FROM_PIECE);
         set => this[TorrentFields.SEQUENTIAL_DOWNLOAD_FROM_PIECE] = value;
     }
 }

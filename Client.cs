@@ -6,6 +6,7 @@ using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Transmission.API.RPC.Entity;
 using Transmission.API.RPC.Params;
+using Transmission.API.RPC.Utils;
 
 namespace Transmission.API.RPC
 {

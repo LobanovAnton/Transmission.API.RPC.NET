@@ -17,7 +17,7 @@ public class Units
     /// Speed bytes
     /// </summary>
     [JsonPropertyName("speed_bytes")]
-    public int? SpeedBytes { get; set; }
+    public int SpeedBytes { get; set; }
 
     /// <summary>
     /// Size units
@@ -29,7 +29,7 @@ public class Units
     /// Size bytes
     /// </summary>
     [JsonPropertyName("size_bytes")]
-    public int? SizeBytes { get; set; }
+    public int SizeBytes { get; set; }
 
     /// <summary>
     /// Memory units
@@ -41,5 +41,5 @@ public class Units
     /// Memory bytes
     /// </summary>
     [JsonPropertyName("memory_bytes")]
-    public int? MemoryBytes { get; set; }
+    public int MemoryBytes { get; set; }
 }
