@@ -4,7 +4,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <OutputType>Library</OutputType>
         <PackageIcon>Transmission.png</PackageIcon>
-        <Version>4.1.1</Version>
+        <Version>4.1.2</Version>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageId>Transmission.API.RPC.NET</PackageId>
@@ -13,7 +13,15 @@
         <Description>Client for Transmission API</Description>
         <Copyright>Copyright 2026</Copyright>
         <PackageTags>Transmission RPC NET10</PackageTags>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/LobanovAnton/Transmission.API.RPC.NET</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>
+4.1.2
+• FreeSpace function now returns a FreeSpace class according to the original specification
+• PortTest function now return a PortTest class according to the ooriginal specification
+• Improving performance when deserializing objects using the generated partial code of the JsonSerializerContext class
+
 4.1.1
 • Fix type mismatch of field SequentialDownload in SessionInfo
 
@@ -39,7 +47,6 @@
 • Using System.Text.Json instead of Newtonsoft Json.NET.
 • Support for server version 4.1.0
         </PackageReleaseNotes>
-        <PackageLicenseExpression>MIT</PackageLicenseExpression>
     </PropertyGroup>
 
     <ItemGroup>

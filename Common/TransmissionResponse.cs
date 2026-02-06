@@ -36,14 +36,5 @@ namespace Transmission.API.RPC.Common
 		[JsonPropertyName("result")]
 		[JsonInclude]
 		public JsonDocument Result;
-		
-		/// <summary>
-		/// Deserialize to class
-		/// </summary>
-		/// <returns></returns>
-		public T Deserialize<T>()
-		{
-			return (T)Result.Deserialize(typeof(T), SourceGenerationContext.Default);
-		}
 	}
 }
