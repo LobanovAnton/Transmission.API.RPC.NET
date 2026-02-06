@@ -1,7 +1,8 @@
 using System.Text.Json.Serialization;
+using Transmission.API.RPC.Common;
 using Transmission.API.RPC.Entity;
 
-namespace Transmission.API.RPC.Common;
+namespace Transmission.API.RPC.Utils;
 
 [JsonSourceGenerationOptions(WriteIndented = false)]
 [JsonSerializable(typeof(TransmissionTorrents))]

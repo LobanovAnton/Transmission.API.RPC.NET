@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Transmission.API.RPC.Entity;
 using Transmission.API.RPC.Common;
 using Transmission.API.RPC.Arguments;
+using Transmission.API.RPC.Utils;
 
 namespace Transmission.API.RPC
 {
