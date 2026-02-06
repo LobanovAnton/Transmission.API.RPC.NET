@@ -3,7 +3,6 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
-using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using Transmission.API.RPC.Entity;
 using Transmission.API.RPC.Params;
@@ -16,7 +15,6 @@ namespace Transmission.API.RPC
     public partial class Client : ITransmissionClient, ITransmissionClientAsync
     {
         private static readonly IHttpClientFactory HttpClientFactory = CreateHttpClientFactory();
-        private static readonly JsonSerializerOptions SerializerOptions = new() { WriteIndented = false };
         private static readonly MediaTypeHeaderValue JsonMediaType = new(MediaTypeNames.Application.Json);
         
         private readonly string _authorization;
