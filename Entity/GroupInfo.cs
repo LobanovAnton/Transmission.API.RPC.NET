@@ -1,5 +1,5 @@
 using System.Text.Json.Serialization;
-using Transmission.API.RPC.Arguments;
+using Transmission.API.RPC.Params;
 
 namespace Transmission.API.RPC.Entity;
 

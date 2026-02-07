@@ -1,6 +1,6 @@
 namespace Transmission.API.RPC.Common;
 
-public static class Methods
+internal static class Methods
 {
     public const string BLOCKLIST_UPDATE = "blocklist_update";
     public const string FREE_SPACE = "free_space";

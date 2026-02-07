@@ -3,7 +3,7 @@ using Transmission.API.RPC.Common;
 
 namespace Transmission.API.RPC.Utils;
 
-public static class ResponseExtension
+internal static class ResponseExtension
 {
     public static T Deserialize<T>(this TransmissionResponse response)
     {

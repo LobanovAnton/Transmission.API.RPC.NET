@@ -4,7 +4,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <OutputType>Library</OutputType>
         <PackageIcon>Transmission.png</PackageIcon>
-        <Version>4.1.2</Version>
+        <Version>4.1.3</Version>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageId>Transmission.API.RPC.NET</PackageId>
@@ -17,6 +17,11 @@
         <RepositoryUrl>https://github.com/LobanovAnton/Transmission.API.RPC.NET</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>
+4.1.3
+• Improving performance serializing request using the generated partial code of the JsonSerializerContext class
+• Added required modifier for some fields, nullable value types has been removed
+• Update usage example in Readme.md
+
 4.1.2
 • FreeSpace function now returns a FreeSpace class according to the original specification
 • PortTest function now return a PortTest class according to the ooriginal specification

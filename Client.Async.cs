@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -8,7 +7,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Transmission.API.RPC.Entity;
 using Transmission.API.RPC.Common;
-using Transmission.API.RPC.Arguments;
+using Transmission.API.RPC.Params;
 using Transmission.API.RPC.Utils;
 
 namespace Transmission.API.RPC
@@ -22,7 +21,11 @@ namespace Transmission.API.RPC
 		/// </summary>
 		public async Task CloseSessionAsync()
 		{
-			var request = new TransmissionRequest(Methods.SESSION_CLOSE);
+			var request = new TransmissionRequest
+			{
+				Method = Methods.SESSION_CLOSE
+			};
+			
 			await SendRequestAsync(request);
 		}
 
@@ -32,7 +35,12 @@ namespace Transmission.API.RPC
 		/// <param name="settings">New session settings</param>
 		public async Task SetSessionSettingsAsync(SessionSettings settings)
 		{
-			var request = new TransmissionRequest(Methods.SESSION_SET, settings);
+			var request = new TransmissionRequest
+			{
+				Method = Methods.SESSION_SET,
+				Parameters = settings
+			};
+			
 			await SendRequestAsync(request);
 		}
 
@@ -42,7 +50,11 @@ namespace Transmission.API.RPC
 		/// <returns>Session stat</returns>
 		public async Task<Statistic> GetSessionStatisticAsync()
 		{
-			var request = new TransmissionRequest(Methods.SESSION_STATS);
+			var request = new TransmissionRequest
+			{
+				Method = Methods.SESSION_STATS
+			};
+			
 			var response = await SendRequestAsync(request);
 			var result = response.Deserialize<Statistic>();
 			return result;
@@ -54,10 +66,12 @@ namespace Transmission.API.RPC
         /// <returns>Session information</returns>
         public async Task<SessionInfo> GetSessionInformationAsync(string[] fields = null)
 		{
-			var arguments = new Dictionary<string, object>();
-			arguments.Add(ApiFields.FIELDS, fields);
+			var request = new TransmissionRequest
+			{
+				Method = Methods.SESSION_GET,
+				Parameters = new Parameters { { ApiFields.FIELDS, fields } }
+			};
 			
-			var request = new TransmissionRequest(Methods.SESSION_GET, arguments);
 			var response = await SendRequestAsync(request);
 			var result = response.Deserialize<SessionInfo>();
 			return result;
@@ -76,7 +90,12 @@ namespace Transmission.API.RPC
 			if (String.IsNullOrWhiteSpace(torrent.Metainfo) && String.IsNullOrWhiteSpace(torrent.Filename))
 				throw new Exception("Either \"filename\" or \"metainfo\" must be included.");
 
-			var request = new TransmissionRequest(Methods.TORRENT_ADD, torrent);
+			var request = new TransmissionRequest
+			{
+				Method = Methods.TORRENT_ADD,
+				Parameters = torrent
+			};
+			
 			var response = await SendRequestAsync(request);
 			var result = response.Deserialize<AddTorrentInfo>();
 			return result;
@@ -88,7 +107,12 @@ namespace Transmission.API.RPC
         /// <param name="settings">Torrent settings</param>
         public async Task TorrentSetAsync(TorrentSettings settings)
         {
-	        var request = new TransmissionRequest(Methods.TORRENT_SET, settings);
+	        var request = new TransmissionRequest
+	        {
+		        Method = Methods.TORRENT_SET,
+		        Parameters = settings
+	        };
+	        
 	        await SendRequestAsync(request);
         }
 
@@ -100,13 +124,16 @@ namespace Transmission.API.RPC
 		/// <returns>Torrents info</returns>
 		public async Task<TransmissionTorrents> TorrentGetAsync(string[] fields, object[] ids)
 		{
-			var arguments = new Dictionary<string, object>();
-			arguments.Add(ApiFields.FIELDS, fields);
+			var arguments = new Parameters { { ApiFields.FIELDS, fields } };
 
 			if (ids != null && ids.Length > 0) 
 				arguments.Add(ApiFields.IDS, ids);
 
-			var request = new TransmissionRequest(Methods.TORRENT_GET, arguments);
+			var request = new TransmissionRequest
+			{
+				Method = Methods.TORRENT_GET,
+				Parameters = arguments
+			};
 
 			var response = await SendRequestAsync(request);
 			var result = response.Deserialize<TransmissionTorrents>();
@@ -119,13 +146,17 @@ namespace Transmission.API.RPC
         /// <param name="ids">Torrents id</param>
         /// <param name="deleteData">Remove data</param>
         public async Task TorrentRemoveAsync(object[] ids, bool deleteData = false)
-		{
-			var arguments = new Dictionary<string, object>();
-
-			arguments.Add(ApiFields.IDS, ids);
-			arguments.Add(ApiFields.DELETE_LOCAL_DATA, deleteData);
-
-			var request = new TransmissionRequest(Methods.TORRENT_REMOVE, arguments);
+        {
+	        var request = new TransmissionRequest
+	        {
+		        Method = Methods.TORRENT_REMOVE,
+		        Parameters = new Parameters
+		        {
+			        { ApiFields.IDS, ids },
+			        { ApiFields.DELETE_LOCAL_DATA, deleteData }
+		        }
+	        };
+	        
 			await SendRequestAsync(request);
 		}
 
@@ -137,8 +168,12 @@ namespace Transmission.API.RPC
 		/// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
 		public async Task TorrentStartAsync(object[] ids)
 		{
-			var request = new TransmissionRequest(Methods.TORRENT_START, 
-				new Dictionary<string, object> { { ApiFields.FIELDS, ids } });
+			var request = new TransmissionRequest
+			{
+				Method = Methods.TORRENT_START,
+				Parameters = new Parameters { { ApiFields.FIELDS, ids } }
+			};
+			
 			await SendRequestAsync(request);
 		}
 
@@ -147,8 +182,12 @@ namespace Transmission.API.RPC
 		/// </summary>
 		public async Task TorrentStartAsync()
 		{
-			var request = new TransmissionRequest(Methods.TORRENT_START, 
-				new Dictionary<string, object> { { ApiFields.IDS, ApiFields.RECENTLY_ACTIVE } });
+			var request = new TransmissionRequest
+			{
+				Method = Methods.TORRENT_START,
+				Parameters = new Parameters { { ApiFields.IDS, ApiFields.RECENTLY_ACTIVE } }
+			};
+			
 			await SendRequestAsync(request);
 		}
 
@@ -162,8 +201,12 @@ namespace Transmission.API.RPC
 		/// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
 		public async Task TorrentStartNowAsync(object[] ids)
 		{
-			var request = new TransmissionRequest(Methods.TORRENT_START_NOW, 
-				new Dictionary<string, object> { { ApiFields.IDS, ids } });
+			var request = new TransmissionRequest
+			{
+				Method = Methods.TORRENT_START_NOW,
+				Parameters = new Parameters { { ApiFields.IDS, ids } }
+			};
+			
 			await SendRequestAsync(request);
 		}
 
@@ -172,8 +215,12 @@ namespace Transmission.API.RPC
 		/// </summary>
 		public async Task TorrentStartNowAsync()
 		{
-			var request = new TransmissionRequest(Methods.TORRENT_START_NOW, 
-				new Dictionary<string, object> { { ApiFields.IDS, ApiFields.RECENTLY_ACTIVE } });
+			var request = new TransmissionRequest
+			{
+				Method = Methods.TORRENT_START_NOW,
+				Parameters = new Parameters { { ApiFields.IDS, ApiFields.RECENTLY_ACTIVE } }
+			};
+			
 			await SendRequestAsync(request);
 		}
 
@@ -187,8 +234,12 @@ namespace Transmission.API.RPC
 		/// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
 		public async Task TorrentStopAsync(object[] ids)
 		{
-			var request = new TransmissionRequest(Methods.TORRENT_STOP, 
-				new Dictionary<string, object> { { ApiFields.IDS, ids } });
+			var request = new TransmissionRequest
+			{
+				Method = Methods.TORRENT_STOP,
+				Parameters = new Parameters { { ApiFields.IDS, ids } }
+			};
+			
 			await SendRequestAsync(request);
 		}
 
@@ -197,8 +248,12 @@ namespace Transmission.API.RPC
 		/// </summary>
 		public async Task TorrentStopAsync()
 		{
-			var request = new TransmissionRequest(Methods.TORRENT_STOP, 
-				new Dictionary<string, object> { { ApiFields.IDS, ApiFields.RECENTLY_ACTIVE } });
+			var request = new TransmissionRequest
+			{
+				Method = Methods.TORRENT_STOP,
+				Parameters = new Parameters { { ApiFields.IDS, ApiFields.RECENTLY_ACTIVE } }
+			};
+			
 			await SendRequestAsync(request);
 		}
 		
@@ -208,15 +263,23 @@ namespace Transmission.API.RPC
 
 		public async Task TorrentReannounceAsync(object[] ids)
 		{
-			var request = new TransmissionRequest(Methods.TORRENT_REANNOUNCE, 
-				new Dictionary<string, object> { { ApiFields.IDS, ids } });
+			var request = new TransmissionRequest
+			{
+				Method = Methods.TORRENT_REANNOUNCE,
+				Parameters = new Parameters { { ApiFields.IDS, ids } }
+			};
+			
 			await SendRequestAsync(request);
 		}
 		
 		public async Task TorrentReannounceAsync()
 		{
-			var request = new TransmissionRequest(Methods.TORRENT_REANNOUNCE, 
-				new Dictionary<string, object> { { ApiFields.IDS, ApiFields.RECENTLY_ACTIVE } });
+			var request = new TransmissionRequest
+			{
+				Method = Methods.TORRENT_REANNOUNCE,
+				Parameters = new Parameters { { ApiFields.IDS, ApiFields.RECENTLY_ACTIVE } }
+			};
+			
 			await SendRequestAsync(request);
 		}
 		
@@ -230,8 +293,12 @@ namespace Transmission.API.RPC
 		/// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
 		public async Task TorrentVerifyAsync(object[] ids)
 		{
-			var request = new TransmissionRequest(Methods.TORRENT_VERIFY, 
-				new Dictionary<string, object> { { ApiFields.IDS, ids } });
+			var request = new TransmissionRequest
+			{
+				Method = Methods.TORRENT_VERIFY,
+				Parameters = new Parameters { { ApiFields.IDS, ids } }
+			};
+			
 			await SendRequestAsync(request);
 		}
 
@@ -240,8 +307,12 @@ namespace Transmission.API.RPC
 		/// </summary>
 		public async Task TorrentVerifyAsync()
 		{
-			var request = new TransmissionRequest(Methods.TORRENT_VERIFY, 
-				new Dictionary<string, object> { { ApiFields.IDS, ApiFields.RECENTLY_ACTIVE } });
+			var request = new TransmissionRequest
+			{
+				Method = Methods.TORRENT_VERIFY,
+				Parameters = new Parameters { { ApiFields.IDS, ApiFields.RECENTLY_ACTIVE } }
+			};
+			
 			await SendRequestAsync(request);
 		}
 		#endregion
@@ -252,8 +323,12 @@ namespace Transmission.API.RPC
 		/// <param name="ids">Torrents id</param>
 		public async Task TorrentQueueMoveTopAsync(object[] ids)
 		{
-			var request = new TransmissionRequest(Methods.QUEUE_MOVE_TOP, 
-				new Dictionary<string, object> { { ApiFields.IDS, ids } });
+			var request = new TransmissionRequest
+			{
+				Method = Methods.QUEUE_MOVE_TOP,
+				Parameters = new Parameters { { ApiFields.IDS, ids } }
+			};
+			
 			await SendRequestAsync(request);
 		}
 
@@ -263,8 +338,12 @@ namespace Transmission.API.RPC
 		/// <param name="ids"></param>
 		public async Task TorrentQueueMoveUpAsync(object[] ids)
 		{
-			var request = new TransmissionRequest(Methods.QUEUE_MOVE_UP, 
-				new Dictionary<string, object> { { ApiFields.IDS, ids } });
+			var request = new TransmissionRequest
+			{
+				Method = Methods.QUEUE_MOVE_UP,
+				Parameters = new Parameters { { ApiFields.IDS, ids } }
+			};
+			
 			await SendRequestAsync(request);
 		}
 
@@ -274,8 +353,12 @@ namespace Transmission.API.RPC
 		/// <param name="ids"></param>
 		public async Task TorrentQueueMoveDownAsync(object[] ids)
 		{
-			var request = new TransmissionRequest(Methods.QUEUE_MOVE_DOWN,
-				new Dictionary<string, object> { { ApiFields.IDS, ids } });
+			var request = new TransmissionRequest
+			{
+				Method = Methods.QUEUE_MOVE_DOWN,
+				Parameters = new Parameters { { ApiFields.IDS, ids } }
+			};
+			
 			await SendRequestAsync(request);
 		}
 
@@ -285,8 +368,12 @@ namespace Transmission.API.RPC
 		/// <param name="ids"></param>
 		public async Task TorrentQueueMoveBottomAsync(object[] ids)
 		{
-			var request = new TransmissionRequest(Methods.QUEUE_MOVE_BOTTOM, 
-				new Dictionary<string, object> { { ApiFields.IDS, ids } });
+			var request = new TransmissionRequest
+			{
+				Method = Methods.QUEUE_MOVE_BOTTOM,
+				Parameters = new Parameters { { ApiFields.IDS, ids } }
+			};
+			
 			await SendRequestAsync(request);
 		}
 
@@ -298,12 +385,17 @@ namespace Transmission.API.RPC
 		/// <param name="move">Move from previous location</param>
 		public async Task TorrentSetLocationAsync(object[] ids, string location, bool move)
 		{
-			var arguments = new Dictionary<string, object>();
-			arguments.Add(ApiFields.IDS, ids);
-			arguments.Add(ApiFields.LOCATION, location);
-			arguments.Add(ApiFields.MOVE, move);
-
-			var request = new TransmissionRequest(Methods.TORRENT_SET_LOCATION, arguments);
+			var request = new TransmissionRequest
+			{
+				Method = Methods.TORRENT_SET_LOCATION,
+				Parameters = new Parameters
+				{
+					{ ApiFields.IDS, ids },
+					{ ApiFields.LOCATION, location },
+					{ ApiFields.MOVE, move }
+				}
+			};
+			
 			await SendRequestAsync(request);
 		}
 
@@ -315,12 +407,17 @@ namespace Transmission.API.RPC
 		/// <param name="name">The file or folder's new name</param>
 		public async Task<RenameTorrentInfo> TorrentRenamePathAsync(int id, string path, string name)
 		{
-			var arguments = new Dictionary<string, object>();
-			arguments.Add(ApiFields.IDS, new[] { id });
-			arguments.Add(ApiFields.PATH, path);
-			arguments.Add(TorrentFields.NAME, name);
-
-			var request = new TransmissionRequest(Methods.TORRENT_RENAME_PATH, arguments);
+			var request = new TransmissionRequest
+			{
+				Method = Methods.TORRENT_RENAME_PATH,
+				Parameters = new Parameters
+				{
+					{ ApiFields.IDS, new[] { id } },
+					{ ApiFields.PATH, path },
+					{ TorrentFields.NAME, name }
+				}
+			};
+			
 			var response = await SendRequestAsync(request);
 			var result = response.Deserialize<RenameTorrentInfo>();
 			return result;
@@ -336,7 +433,11 @@ namespace Transmission.API.RPC
 		/// <returns>Accessible state</returns>
 		public async Task<PortTest> PortTestAsync()
 		{
-			var request = new TransmissionRequest(Methods.PORT_TEST);
+			var request = new TransmissionRequest
+			{
+				Method = Methods.PORT_TEST
+			};
+			
 			var response = await SendRequestAsync(request);
 
 			var data = response.Deserialize<PortTest>();
@@ -349,7 +450,11 @@ namespace Transmission.API.RPC
 		/// <returns>Blocklist size</returns>
 		public async Task<int> BlocklistUpdateAsync()
 		{
-			var request = new TransmissionRequest(Methods.BLOCKLIST_UPDATE);
+			var request = new TransmissionRequest
+			{
+				Method = Methods.BLOCKLIST_UPDATE
+			};
+			
 			var response = await SendRequestAsync(request);
 
 			var data = response.Deserialize<BlockList>();
@@ -362,10 +467,12 @@ namespace Transmission.API.RPC
 		/// <param name="path">The directory to query</param>
 		public async Task<FreeSpace> FreeSpaceAsync(string path)
 		{
-			var arguments = new Dictionary<string, object>();
-			arguments.Add(ApiFields.PATH, path);
-
-			var request = new TransmissionRequest(Methods.FREE_SPACE, arguments);
+			var request = new TransmissionRequest
+			{
+				Method = Methods.FREE_SPACE,
+				Parameters = new Parameters { { ApiFields.PATH, path } }
+			};
+			
 			var response = await SendRequestAsync(request);
 
 			var data = response.Deserialize<FreeSpace>();
@@ -376,16 +483,23 @@ namespace Transmission.API.RPC
 
         public async Task GroupSet(Group group)
         {
-	        TransmissionRequest request = new TransmissionRequest(Methods.GROUP_SET, group);
+	        TransmissionRequest request = new TransmissionRequest
+	        {
+		        Method = Methods.GROUP_SET,
+		        Parameters = group
+	        };
+	        
 	        await SendRequestAsync(request);
         }
 
         public async Task<GroupsInfo> GroupGet(string groupName = null)
         {
-	        Dictionary<string, object> arguments = new Dictionary<string, object>();
-	        arguments.Add(TorrentFields.NAME, groupName);
+	        var request = new TransmissionRequest
+	        {
+		        Method = Methods.GROUP_GET,
+		        Parameters = new Parameters { { TorrentFields.NAME, groupName } }
+	        };
 	        
-	        var request = new TransmissionRequest(Methods.GROUP_GET, arguments);
 	        var response = await SendRequestAsync(request);
 
 	        GroupsInfo groupsInfo = response.Deserialize<GroupsInfo>();
@@ -407,7 +521,7 @@ namespace Transmission.API.RPC
             if (_needAuthorization)
                 httpRequest.Headers.Add("Authorization", _authorization);
 
-            httpRequest.Content = JsonContent.Create(request, JsonMediaType, SerializerOptions);
+            httpRequest.Content = JsonContent.Create(request, SourceGenerationContext.Default.TransmissionRequest, JsonMediaType);
 
             //Send request and prepare response
             using var httpResponse = await httpClient.SendAsync(httpRequest);
