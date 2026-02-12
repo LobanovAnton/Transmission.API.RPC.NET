@@ -48,7 +48,7 @@ public class TorrentInfo
     /// Corrupt ever
     /// </summary>
     [JsonPropertyName(TorrentFields.CORRUPT_EVER)]
-    public int CorruptEver { get; set; }
+    public long CorruptEver { get; set; }
 
     /// <summary>
     /// Creator
