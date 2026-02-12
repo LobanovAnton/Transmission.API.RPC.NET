@@ -57,45 +57,52 @@ public class TransmissionTorrentProvider(string url, string username, string pas
 {
     private const string Provider = "Transmission";
 
-    private static readonly string[] TorrentModelFields =
-    [
-        TorrentFields.ID,
-        TorrentFields.NAME,
-        TorrentFields.TOTAL_SIZE,
-        TorrentFields.STATUS,
-        TorrentFields.PERCENT_DONE,
-        TorrentFields.RECHECK_PROGRESS,
-        TorrentFields.RATE_DOWNLOAD,
-        TorrentFields.RATE_UPLOAD,
-        TorrentFields.UPLOAD_RATIO,
-        TorrentFields.LEFT_UNTIL_DONE,
-        TorrentFields.SECONDS_DOWNLOADING,
-        TorrentFields.ADDED_DATE,
-        TorrentFields.QUEUE_POSITION,
-        TorrentFields.DOWNLOAD_DIR
-    ];
+    private static readonly Dictionary<TorrentField, string> FieldMap = new()
+    {
+        { TorrentField.Id, TorrentFields.ID },
+        { TorrentField.Name, TorrentFields.NAME },
+        { TorrentField.Availability , TorrentFields.AVAILABILITY },
+        { TorrentField.TotalSize, TorrentFields.TOTAL_SIZE },
+        { TorrentField.Status, TorrentFields.STATUS },
+        { TorrentField.PercentDone, TorrentFields.PERCENT_DONE },
+        { TorrentField.RecheckProgress, TorrentFields.RECHECK_PROGRESS },
+        { TorrentField.RateDownload, TorrentFields.RATE_DOWNLOAD },
+        { TorrentField.RateUpload, TorrentFields.RATE_UPLOAD },
+        { TorrentField.UploadRatio, TorrentFields.UPLOAD_RATIO },
+        { TorrentField.LeftUntilDone, TorrentFields.LEFT_UNTIL_DONE },
+        { TorrentField.SecondsDownloading, TorrentFields.SECONDS_DOWNLOADING },
+        { TorrentField.AddedDate, TorrentFields.ADDED_DATE },
+        { TorrentField.QueuePosition, TorrentFields.QUEUE_POSITION },
+        { TorrentField.DownloadDir, TorrentFields.DOWNLOAD_DIR },
+        { TorrentField.Files, TorrentFields.FILES },
+        { TorrentField.FileStats, TorrentFields.FILE_STATS },
+        { TorrentField.Pieces, TorrentFields.PIECES },
+        { TorrentField.PieceCount, TorrentFields.PIECE_COUNT },
+        { TorrentField.SequentialDownload, TorrentFields.SEQUENTIAL_DOWNLOAD },
+    };
 
-    private static readonly string[] SessionModelFields =
-    [
-        SessionFields.SESSION_ID,
-        SessionFields.VERSION,
-        SessionFields.CACHE_SIZE_MB,
-        SessionFields.DOWNLOAD_DIR,
-        SessionFields.INCOMPLETE_DIR,
-        SessionFields.INCOMPLETE_DIR_ENABLED,
-        SessionFields.PEX_ENABLED,
-        SessionFields.LPD_ENABLED,
-        SessionFields.DHT_ENABLED,
-        SessionFields.UTP_ENABLED,
-        SessionFields.ENCRYPTION,
-        SessionFields.UNITS,
-        SessionFields.DOWNLOAD_QUEUE_ENABLED,
-        SessionFields.DOWNLOAD_QUEUE_SIZE,
-        SessionFields.SEED_QUEUE_ENABLED,
-        SessionFields.SEED_QUEUE_SIZE,
-        SessionFields.PORT_FORWARDING_ENABLED,
-        SessionFields.PEER_PORT
-    ];
+    private static readonly Dictionary<SessionField, string> SessionFieldMap = new()
+    {
+        { SessionField.SessionId, SessionFields.SESSION_ID },
+        { SessionField.Version, SessionFields.VERSION },
+        { SessionField.CacheSize, SessionFields.CACHE_SIZE_MB },
+        { SessionField.DownloadDir, SessionFields.DOWNLOAD_DIR },
+        { SessionField.IncompleteDir, SessionFields.INCOMPLETE_DIR },
+        { SessionField.IncompleteDirEnabled, SessionFields.INCOMPLETE_DIR_ENABLED },
+        { SessionField.PexEnabled, SessionFields.PEX_ENABLED },
+        { SessionField.LpdEnabled, SessionFields.LPD_ENABLED },
+        { SessionField.DhtEnabled, SessionFields.DHT_ENABLED },
+        { SessionField.UtpEnabled, SessionFields.UTP_ENABLED },
+        { SessionField.Encryption, SessionFields.ENCRYPTION },
+        { SessionField.Units, SessionFields.UNITS },
+        { SessionField.DownloadQueueEnabled, SessionFields.DOWNLOAD_QUEUE_ENABLED },
+        { SessionField.DownloadQueueSize, SessionFields.DOWNLOAD_QUEUE_SIZE },
+        { SessionField.SeedQueueEnabled, SessionFields.SEED_QUEUE_ENABLED },
+        { SessionField.SeedQueueSize, SessionFields.SEED_QUEUE_SIZE },
+        { SessionField.PortForwardingEnabled, SessionFields.PORT_FORWARDING_ENABLED },
+        { SessionField.PeerPort, SessionFields.PEER_PORT },
+        { SessionField.SequentialDownload, SessionFields.SEQUENTIAL_DOWNLOAD },
+    };
 
     private static string? _sessionId;
 
@@ -107,12 +114,20 @@ public class TransmissionTorrentProvider(string url, string username, string pas
         return freeSpace.SizeBytes;
     }
 
-    public async Task<SessionModel> GetSessionModelAsync()
+    public Task SetTorrentLocationAsync(int id, string destinationPath)
     {
-        SessionInfo sessionInfo = await _client.GetSessionInformationAsync(SessionModelFields);
+        return _client.TorrentSetLocationAsync([id], destinationPath, true);
+    }
+
+    public async Task<SessionModel> GetSessionModelAsync(SessionField[] fields)
+    {
+        HashSet<SessionField> fieldSet = new(fields) { SessionField.SessionId };
+        string[] rpcFields = fieldSet.Select(f => SessionFieldMap[f]).ToArray();
+
+        SessionInfo sessionInfo = await _client.GetSessionInformationAsync(rpcFields);
   
         _sessionId = sessionInfo.SessionId;
-        
+
         SessionModel model = new SessionModel
         {
             Version = $"{Provider} {sessionInfo.Version}",
@@ -124,10 +139,12 @@ public class TransmissionTorrentProvider(string url, string username, string pas
             UseLpd = sessionInfo.LpdEnabled,
             UseDht = sessionInfo.DhtEnabled,
             UseUdp = sessionInfo.UtpEnabled,
-            EncryptionMode = Enum.Parse<Encryption>(sessionInfo.Encryption, true),
-            SpeedUnits = sessionInfo.Units.SpeedBytes,
-            SizeUnits = sessionInfo.Units.SizeBytes,
-            MemoryUnits = sessionInfo.Units.MemoryBytes,
+            EncryptionMode = sessionInfo.Encryption != null ? 
+                Enum.Parse<Encryption>(sessionInfo.Encryption, true)
+                : Encryption.Preferred,
+            SpeedUnits = sessionInfo.Units?.SpeedBytes ?? 0,
+            SizeUnits = sessionInfo.Units?.SizeBytes ?? 0,
+            MemoryUnits = sessionInfo.Units?.MemoryBytes ?? 0,
             DownloadQueueEnabled = sessionInfo.DownloadQueueEnabled,
             DownloadQueueSize = sessionInfo.DownloadQueueSize,
             SeedQueueEnabled = sessionInfo.SeedQueueEnabled,
@@ -139,28 +156,42 @@ public class TransmissionTorrentProvider(string url, string username, string pas
         return model;
     }
     
-    public async Task SetSessionModelAsync(SessionModel sessionModel)
+    public Task SetSessionSettingsAsync(SessionSettingsModel model)
     {
-        SessionSettings settings = new()
-        {
-            CacheSizeMb = sessionModel.CacheSize,
-            DownloadDirectory = sessionModel.CompletePath,
-            IncompleteDirectoryEnabled = sessionModel.InCompletePathEnabled,
-            IncompleteDirectory = sessionModel.InCompletePath,
-            PexEnabled = sessionModel.UsePex,
-            LpdEnabled = sessionModel.UseLpd,
-            DhtEnabled = sessionModel.UseDht,
-            UtpEnabled = sessionModel.UseUdp,
-            Encryption = sessionModel.EncryptionMode.ToString().ToLower(),
-            DownloadQueueEnabled = sessionModel.DownloadQueueEnabled,
-            DownloadQueueSize = sessionModel.DownloadQueueSize,
-            SeedQueueEnabled = sessionModel.SeedQueueEnabled,
-            SeedQueueSize = sessionModel.SeedQueueSize,
-            PortForwardingEnabled = sessionModel.PortForwardingEnabled,
-            PeerPort = sessionModel.PeerPort
-        };
+        SessionSettings settings = new();
 
-        await _client.SetSessionSettingsAsync(settings);
+        if (model.CacheSize.HasValue)
+            settings.CacheSizeMb = model.CacheSize.Value;
+        if (model.CompletePath != null)
+            settings.DownloadDirectory = model.CompletePath;
+        if (model.InCompletePathEnabled.HasValue)
+            settings.IncompleteDirectoryEnabled = model.InCompletePathEnabled.Value;
+        if (model.InCompletePath != null)
+            settings.IncompleteDirectory = model.InCompletePath;
+        if (model.UsePex.HasValue)
+            settings.PexEnabled = model.UsePex.Value;
+        if (model.UseLpd.HasValue)
+            settings.LpdEnabled = model.UseLpd.Value;
+        if (model.UseDht.HasValue)
+            settings.DhtEnabled = model.UseDht.Value;
+        if (model.UseUdp.HasValue)
+            settings.UtpEnabled = model.UseUdp.Value;
+        if (model.EncryptionMode.HasValue)
+            settings.Encryption = model.EncryptionMode.Value.ToString().ToLower();
+        if (model.DownloadQueueEnabled.HasValue)
+            settings.DownloadQueueEnabled = model.DownloadQueueEnabled.Value;
+        if (model.DownloadQueueSize.HasValue)
+            settings.DownloadQueueSize = model.DownloadQueueSize.Value;
+        if (model.SeedQueueEnabled.HasValue)
+            settings.SeedQueueEnabled = model.SeedQueueEnabled.Value;
+        if (model.SeedQueueSize.HasValue)
+            settings.SeedQueueSize = model.SeedQueueSize.Value;
+        if (model.PortForwardingEnabled.HasValue)
+            settings.PortForwardingEnabled = model.PortForwardingEnabled.Value;
+        if (model.PeerPort.HasValue)
+            settings.PeerPort = model.PeerPort.Value;
+
+        return _client.SetSessionSettingsAsync(settings);
     }
 
     public async Task<StatisticModel> GetStatisticModelAsync()
@@ -194,84 +225,158 @@ public class TransmissionTorrentProvider(string url, string username, string pas
         };
     }
 
-    public async Task<TorrentModel[]> GetTorrentModelAsync()
+    public async Task<TorrentModel[]> GetTorrentModelAsync(TorrentField[] fields, int[]? ids = null)
     {
-        TransmissionTorrents torrents = await _client.TorrentGetAsync(TorrentModelFields, null);
+        HashSet<TorrentField> fieldSet = new(fields) { TorrentField.Id };
+        string[] rpcFields = fieldSet.Select(f => FieldMap[f]).ToArray();
+        object[]? rpcIds = ids?.Select<int, object>(id => id).ToArray();
+
+        TransmissionTorrents torrents = await _client.TorrentGetAsync(rpcFields, rpcIds);
         TorrentInfo[] torrentInfos = torrents.Torrents;
-        
+
         TorrentModel[] models = new TorrentModel[torrentInfos.Length];
 
         for (int i = 0; i < models.Length; i++)
         {
+            TorrentInfo info = torrentInfos[i];
+
             models[i] = new TorrentModel
             {
-                Id = torrentInfos[i].Id,
-                QueuePosition = torrentInfos[i].QueuePosition,
-                Name = torrentInfos[i].Name,
-                TotalSize = torrentInfos[i].TotalSize,
-                Progress = torrentInfos[i].PercentDone,
-                VerifyingProgress = torrentInfos[i].RecheckProgress,
-                DownloadRate = torrentInfos[i].RateDownload,
-                UploadRate = torrentInfos[i].RateUpload,
-                UploadRatio = torrentInfos[i].UploadRatio,
-                LeftUntilDone = torrentInfos[i].LeftUntilDone,
-                SecondsDownloading = torrentInfos[i].SecondsDownloading,
-                Status = (TorrentModel.State)torrentInfos[i].Status,
-                DownloadDir = torrentInfos[i].DownloadDir,
-                DateAdded = torrentInfos[i].AddedDate
+                Id = info.Id,
+                QueuePosition = info.QueuePosition,
+                Name = info.Name,
+                TotalSize = info.TotalSize,
+                Progress = info.PercentDone,
+                VerifyingProgress = info.RecheckProgress,
+                DownloadRate = info.RateDownload,
+                UploadRate = info.RateUpload,
+                UploadRatio = info.UploadRatio,
+                LeftUntilDone = info.LeftUntilDone,
+                SecondsDownloading = info.SecondsDownloading,
+                Status = (TorrentModel.State)info.Status,
+                DownloadDir = info.DownloadDir,
+                DateAdded = info.AddedDate,
+                SequentialDownload =  info.SequentialDownload
             };
+
+            if (fieldSet.Contains(TorrentField.Files) && info.Files != null)
+            {
+                TransmissionTorrentFiles[] files = info.Files;
+                TransmissionTorrentFileStats[] fileStats = info.FileStats;
+                TorrentFileModel[] fileModels = new TorrentFileModel[files.Length];
+
+                for (int j = 0; j < fileModels.Length; j++)
+                {
+                    fileModels[j] = new TorrentFileModel
+                    {
+                        Name = files[j].Name,
+                        Length = files[j].Length,
+                        BytesCompleted = files[j].BytesCompleted,
+                        Wanted = fileStats != null && j < fileStats.Length && fileStats[j].Wanted,
+                        Priority = fileStats != null && j < fileStats.Length ? (FilePriority)fileStats[j].Priority : FilePriority.Normal,
+                        BeginPiece = files[j].BeginPiece,
+                        PieceCount = files[j].EndPiece - files[j].BeginPiece
+                    };
+                }
+
+                models[i].Files = fileModels;
+            }
+
+            if (fieldSet.Contains(TorrentField.Availability) && info.Availability != null)
+                models[i].Availability = info.Availability;
+
+            if (fieldSet.Contains(TorrentField.Pieces) && !string.IsNullOrEmpty(info.Pieces))
+                models[i].Pieces = Convert.FromBase64String(info.Pieces);
         }
-        
+
         return models;
     }
 
-    public async Task AddTorrentAsync(string metaInfo)
+    public Task SetTorrentSettingsAsync(TorrentSettingsModel model)
+    {
+        TorrentSettings settings = new()
+        {
+            Ids = [model.Id]
+        };
+
+        if (model.SequentialDownload.HasValue)
+            settings.SequentialDownload = model.SequentialDownload.Value;
+
+        if (model.FileSettings != null)
+        {
+            int[] wanted = model.FileSettings.Where(f => f.Wanted).Select(f => f.Id).ToArray();
+            int[] unwanted = model.FileSettings.Where(f => !f.Wanted).Select(f => f.Id).ToArray();
+
+            if (wanted.Length > 0)
+                settings.FilesWanted = wanted;
+
+            if (unwanted.Length > 0)
+                settings.FilesUnwanted = unwanted;
+            
+            int[] priorityHigh = model.FileSettings.Where(f => f.Priority == FilePriority.High).Select(f => f.Id).ToArray();
+            int[] priorityNormal = model.FileSettings.Where(f => f.Priority == FilePriority.Normal).Select(f => f.Id).ToArray();
+            int[] priorityLow = model.FileSettings.Where(f => f.Priority == FilePriority.Low).Select(f => f.Id).ToArray();
+            
+            if (priorityHigh.Length > 0)
+                settings.PriorityHigh = priorityHigh;
+
+            if (priorityNormal.Length > 0)
+                settings.PriorityNormal = priorityNormal;
+
+            if (priorityLow.Length > 0)
+                settings.PriorityLow = priorityLow;
+        }
+
+        return _client.TorrentSetAsync(settings);
+    }
+
+    public Task AddTorrentAsync(string metaInfo)
     {
         NewTorrent torrent = new NewTorrent
         {
             Metainfo = metaInfo
         };
-        await _client.TorrentAddAsync(torrent);
+        return _client.TorrentAddAsync(torrent);
     }
 
-    public async Task StartNowTorrentAsync(TorrentModel model)
+    public Task StartNowTorrentAsync(int id)
     {
-        await _client.TorrentStartNowAsync([model.Id]);
+        return _client.TorrentStartNowAsync([id]);
     }
 
-    public async Task StartTorrentAsync(TorrentModel model)
+    public Task StartTorrentAsync(int id)
     {
-        await _client.TorrentStartAsync([model.Id]);
+        return _client.TorrentStartAsync([id]);
     }
 
-    public async Task StopTorrentAsync(TorrentModel model)
+    public Task StopTorrentAsync(int id)
     {
-        await _client.TorrentStopAsync([model.Id]);
+        return _client.TorrentStopAsync([id]);
     }
 
-    public async Task DeleteTorrentAsync(TorrentModel model, bool deleteFiles)
+    public Task DeleteTorrentAsync(int id, bool deleteFiles)
     {
-        await _client.TorrentRemoveAsync([model.Id], deleteFiles);
+        return _client.TorrentRemoveAsync([id], deleteFiles);
     }
 
-    public async Task VerifyTorrentAsync(TorrentModel model)
+    public Task VerifyTorrentAsync(int id)
     {
-        await _client.TorrentVerifyAsync([model.Id]);
+        return _client.TorrentVerifyAsync([id]);
     }
 
-    public async Task DeleteAllAsync(IList<TorrentModel> models)
+    public Task DeleteAllAsync(int[] ids)
     {
-        await _client.TorrentRemoveAsync(models.Select<TorrentModel, object>(x => x.Id).ToArray());
+        return _client.TorrentRemoveAsync(ids.Select<int, object>(x => x).ToArray());
     }
 
-    public async Task StartAllAsync(IList<TorrentModel> models)
+    public Task StartAllAsync(int[] ids)
     {
-        await _client.TorrentStartAsync(models.Select<TorrentModel, object>(x => x.Id).ToArray());
+        return _client.TorrentStartAsync(ids.Select<int, object>(x => x).ToArray());
     }
 
-    public async Task StopAllAsync(IList<TorrentModel> models)
+    public Task StopAllAsync(int[] ids)
     {
-        await _client.TorrentStopAsync(models.Select<TorrentModel, object>(x => x.Id).ToArray());
+        return _client.TorrentStopAsync(ids.Select<int, object>(x => x).ToArray());
     }
 }
 ```

@@ -171,7 +171,7 @@ namespace Transmission.API.RPC
 			var request = new TransmissionRequest
 			{
 				Method = Methods.TORRENT_START,
-				Parameters = new Parameters { { ApiFields.FIELDS, ids } }
+				Parameters = new Parameters { { ApiFields.IDS, ids } }
 			};
 			
 			await SendRequestAsync(request);
