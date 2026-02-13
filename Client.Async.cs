@@ -34,6 +34,7 @@ namespace Transmission.API.RPC
 		/// Set information to current session (API: session-set)
 		/// </summary>
 		/// <param name="settings">New session settings</param>
+		/// <param name="cancellationToken"></param>
 		public async Task SetSessionSettingsAsync(SessionSettings settings, CancellationToken cancellationToken = default)
 		{
 			var request = new TransmissionRequest
@@ -102,11 +103,12 @@ namespace Transmission.API.RPC
 			return result;
 		}
 
-        /// <summary>
-        /// Set torrent params (API: torrent-set)
-        /// </summary>
-        /// <param name="settings">Torrent settings</param>
-        public async Task TorrentSetAsync(TorrentSettings settings, CancellationToken cancellationToken = default)
+		/// <summary>
+		/// Set torrent params (API: torrent-set)
+		/// </summary>
+		/// <param name="settings">Torrent settings</param>
+		/// <param name="cancellationToken"></param>
+		public async Task TorrentSetAsync(TorrentSettings settings, CancellationToken cancellationToken = default)
         {
 	        var request = new TransmissionRequest
 	        {
@@ -117,13 +119,14 @@ namespace Transmission.API.RPC
 	        await SendRequestAsync(request, cancellationToken);
         }
 
-		/// <summary>
-		/// Get fields of torrents from ids (API: torrent-get)
-		/// </summary>
-		/// <param name="fields">Fields of torrents</param>
-		/// <param name="ids">IDs of torrents (null or empty for get all torrents)</param>
-		/// <returns>Torrents info</returns>
-		public async Task<TransmissionTorrents> TorrentGetAsync(string[] fields, object[] ids, CancellationToken cancellationToken = default)
+        /// <summary>
+        /// Get fields of torrents from ids (API: torrent-get)
+        /// </summary>
+        /// <param name="fields">Fields of torrents</param>
+        /// <param name="ids">IDs of torrents (null or empty for get all torrents)</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Torrents info</returns>
+        public async Task<TransmissionTorrents> TorrentGetAsync(string[] fields, object[] ids, CancellationToken cancellationToken = default)
 		{
 			var arguments = new Parameters { { ApiFields.FIELDS, fields } };
 
@@ -141,12 +144,13 @@ namespace Transmission.API.RPC
 			return result;
 		}
 
-        /// <summary>
-        /// Remove torrents
-        /// </summary>
-        /// <param name="ids">Torrents id</param>
-        /// <param name="deleteData">Remove data</param>
-        public async Task TorrentRemoveAsync(object[] ids, bool deleteData = false, CancellationToken cancellationToken = default)
+		/// <summary>
+		/// Remove torrents
+		/// </summary>
+		/// <param name="ids">Torrents id</param>
+		/// <param name="deleteData">Remove data</param>
+		/// <param name="cancellationToken"></param>
+		public async Task TorrentRemoveAsync(object[] ids, bool deleteData = false, CancellationToken cancellationToken = default)
         {
 	        var request = new TransmissionRequest
 	        {
@@ -167,6 +171,7 @@ namespace Transmission.API.RPC
 		/// Start torrents (API: torrent-start)
 		/// </summary>
 		/// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
+		/// <param name="cancellationToken"></param>
 		public async Task TorrentStartAsync(object[] ids, CancellationToken cancellationToken = default)
 		{
 			var request = new TransmissionRequest
@@ -200,6 +205,7 @@ namespace Transmission.API.RPC
 		/// Start now torrents (API: torrent-start-now)
 		/// </summary>
 		/// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
+		/// <param name="cancellationToken"></param>
 		public async Task TorrentStartNowAsync(object[] ids, CancellationToken cancellationToken = default)
 		{
 			var request = new TransmissionRequest
@@ -233,6 +239,7 @@ namespace Transmission.API.RPC
 		/// Stop torrents (API: torrent-stop)
 		/// </summary>
 		/// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
+		/// <param name="cancellationToken"></param>
 		public async Task TorrentStopAsync(object[] ids, CancellationToken cancellationToken = default)
 		{
 			var request = new TransmissionRequest
@@ -292,6 +299,7 @@ namespace Transmission.API.RPC
 		/// Verify torrents (API: torrent-verify)
 		/// </summary>
 		/// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
+		/// <param name="cancellationToken"></param>
 		public async Task TorrentVerifyAsync(object[] ids, CancellationToken cancellationToken = default)
 		{
 			var request = new TransmissionRequest
@@ -322,6 +330,7 @@ namespace Transmission.API.RPC
 		/// Move torrents in queue on top (API: queue-move-top)
 		/// </summary>
 		/// <param name="ids">Torrents id</param>
+		/// <param name="cancellationToken"></param>
 		public async Task TorrentQueueMoveTopAsync(object[] ids, CancellationToken cancellationToken = default)
 		{
 			var request = new TransmissionRequest
@@ -337,6 +346,7 @@ namespace Transmission.API.RPC
 		/// Move up torrents in queue (API: queue-move-up)
 		/// </summary>
 		/// <param name="ids"></param>
+		/// <param name="cancellationToken"></param>
 		public async Task TorrentQueueMoveUpAsync(object[] ids, CancellationToken cancellationToken = default)
 		{
 			var request = new TransmissionRequest
@@ -352,6 +362,7 @@ namespace Transmission.API.RPC
 		/// Move down torrents in queue (API: queue-move-down)
 		/// </summary>
 		/// <param name="ids"></param>
+		/// <param name="cancellationToken"></param>
 		public async Task TorrentQueueMoveDownAsync(object[] ids, CancellationToken cancellationToken = default)
 		{
 			var request = new TransmissionRequest
@@ -385,6 +396,7 @@ namespace Transmission.API.RPC
 		/// <param name="ids">Torrent ids</param>
 		/// <param name="location">The new torrent location</param>
 		/// <param name="move">Move from previous location</param>
+		/// <param name="cancellationToken"></param>
 		public async Task TorrentSetLocationAsync(object[] ids, string location, bool move, CancellationToken cancellationToken = default)
 		{
 			var request = new TransmissionRequest
@@ -407,6 +419,7 @@ namespace Transmission.API.RPC
 		/// <param name="id">The torrent whose path will be renamed</param>
 		/// <param name="path">The path to the file or folder that will be renamed</param>
 		/// <param name="name">The file or folder's new name</param>
+		/// <param name="cancellationToken"></param>
 		public async Task<RenameTorrentInfo> TorrentRenamePathAsync(int id, string path, string name, CancellationToken cancellationToken = default)
 		{
 			var request = new TransmissionRequest
@@ -467,6 +480,7 @@ namespace Transmission.API.RPC
 		/// Get free space is available in a client-specified folder.
 		/// </summary>
 		/// <param name="path">The directory to query</param>
+		/// <param name="cancellationToken"></param>
 		public async Task<FreeSpace> FreeSpaceAsync(string path, CancellationToken cancellationToken = default)
 		{
 			var request = new TransmissionRequest
@@ -542,7 +556,7 @@ namespace Transmission.API.RPC
             {
 	            if (httpResponse.Headers.Any())
 	            {
-		            //If session id expired, try get session id and send request
+		            //If session id expired get session id and send request
 		            if (httpResponse.Headers.TryGetValues("X-Transmission-Session-Id", out var values))
 			            SessionId = values.First();
 		            else

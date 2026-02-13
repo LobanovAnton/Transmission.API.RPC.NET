@@ -4,7 +4,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <OutputType>Library</OutputType>
         <PackageIcon>Transmission.png</PackageIcon>
-        <Version>4.1.4</Version>
+        <Version>4.1.5</Version>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageId>Transmission.API.RPC.NET</PackageId>
@@ -17,6 +17,10 @@
         <RepositoryUrl>https://github.com/LobanovAnton/Transmission.API.RPC.NET</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>
+4.1.5
+• Added CancellationToken parameter to Async methods. 
+If you don't need cancellation dont pass it or pass CancellationToken.None)
+
 4.1.4
 • Fix bug in function TorrentStartAsync (was start all torrents instead of by id)
 • Update Microsoft.Extensions.Http to 10.0.3
