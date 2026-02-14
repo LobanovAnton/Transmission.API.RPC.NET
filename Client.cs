@@ -13,7 +13,9 @@ namespace Transmission.API.RPC
     /// <summary>
     /// Transmission client
     /// </summary>
+#pragma warning disable CS0618 // Type or member is obsolete
     public partial class Client : ITransmissionClient, ITransmissionClientAsync
+#pragma warning restore CS0618 // Type or member is obsolete
     {
         private static readonly IHttpClientFactory HttpClientFactory = CreateHttpClientFactory();
         private static readonly MediaTypeHeaderValue JsonMediaType = new(MediaTypeNames.Application.Json);
