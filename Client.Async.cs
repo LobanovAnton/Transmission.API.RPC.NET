@@ -544,7 +544,8 @@ namespace Transmission.API.RPC
 
             if (httpResponse.IsSuccessStatusCode)
             {
-	            result = (TransmissionResponse)await httpResponse.Content.ReadFromJsonAsync(typeof(TransmissionResponse), SourceGenerationContext.Default, cancellationToken);
+	            result = (TransmissionResponse)await httpResponse.Content.ReadFromJsonAsync(typeof(TransmissionResponse), 
+		            SourceGenerationContext.Default, cancellationToken);
 
 	            if (result == null)
 		            throw new JsonException("Transmission response is null");
@@ -566,7 +567,7 @@ namespace Transmission.API.RPC
 	            }
             }
             else
-	            throw new HttpRequestException();
+	            throw new HttpRequestException(httpResponse.StatusCode.ToString());
 
             return result;
         }
