@@ -3,10 +3,10 @@ using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Transmission.API.RPC.Entity;
 using Transmission.API.RPC.Params;
-using Transmission.API.RPC.Utils;
 
 namespace Transmission.API.RPC
 {
@@ -17,7 +17,7 @@ namespace Transmission.API.RPC
     {
         private static readonly IHttpClientFactory HttpClientFactory = CreateHttpClientFactory();
         private static readonly MediaTypeHeaderValue JsonMediaType = new(MediaTypeNames.Application.Json);
-        
+
         private readonly string _authorization;
         private readonly bool _needAuthorization;
 
@@ -88,40 +88,40 @@ namespace Transmission.API.RPC
         /// <summary>
         /// Close current session (API: session-close)
         /// </summary>
+        [Obsolete("Use CloseSessionAsync instead")]
         public void CloseSession()
         {
-            CloseSessionAsync().WaitAndUnwrapException();
+            Task.Run(() => CloseSessionAsync()).GetAwaiter().GetResult();
         }
 
         /// <summary>
         /// Set information to current session (API: session-set)
         /// </summary>
         /// <param name="settings">New session settings</param>
+        [Obsolete("Use SetSessionSettingsAsync instead")]
         public void SetSessionSettings(SessionSettings settings)
         {
-            SetSessionSettingsAsync(settings).WaitAndUnwrapException();
+            Task.Run(() => SetSessionSettingsAsync(settings)).GetAwaiter().GetResult();
         }
 
         /// <summary>
         /// Get session stat
         /// </summary>
         /// <returns>Session stat</returns>
+        [Obsolete("Use GetSessionStatisticAsync instead")]
         public Statistic GetSessionStatistic()
         {
-            var task = GetSessionStatisticAsync();
-            task.WaitAndUnwrapException();
-            return task.Result;
+            return Task.Run(() => GetSessionStatisticAsync()).GetAwaiter().GetResult();
         }
 
         /// <summary>
         /// Get information of current session (API: session-get)
         /// </summary>
         /// <returns>Session information</returns>
+        [Obsolete("Use GetSessionInformationAsync instead")]
         public SessionInfo GetSessionInformation(string[] fields)
         {
-            var task = GetSessionInformationAsync(fields);
-            task.WaitAndUnwrapException();
-            return task.Result;
+            return Task.Run(() => GetSessionInformationAsync(fields)).GetAwaiter().GetResult();
         }
 
         #endregion
@@ -132,20 +132,20 @@ namespace Transmission.API.RPC
         /// Add torrent (API: torrent-add)
         /// </summary>
         /// <returns>Torrent info (ID, Name and HashString)</returns>
+        [Obsolete("Use TorrentAddAsync instead")]
 		public AddTorrentInfo TorrentAdd(NewTorrent torrent)
         {
-            var task = TorrentAddAsync(torrent);
-            task.WaitAndUnwrapException();
-            return task.Result;
+            return Task.Run(() => TorrentAddAsync(torrent)).GetAwaiter().GetResult();
         }
 
         /// <summary>
         /// Set torrent params (API: torrent-set)
         /// </summary>
         /// <param name="settings">Torrent settings</param>
+        [Obsolete("Use TorrentSetAsync instead")]
         public void TorrentSet(TorrentSettings settings)
         {
-            TorrentSetAsync(settings).WaitAndUnwrapException();
+            Task.Run(() => TorrentSetAsync(settings)).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -154,11 +154,10 @@ namespace Transmission.API.RPC
         /// <param name="fields">Fields of torrents</param>
         /// <param name="ids">IDs of torrents (null or empty for get all torrents)</param>
         /// <returns>Torrents info</returns>
+        [Obsolete("Use TorrentGetAsync instead")]
         public TransmissionTorrents TorrentGet(string[] fields, object[] ids)
         {
-            var task = TorrentGetAsync(fields, ids);
-            task.WaitAndUnwrapException();
-            return task.Result;
+            return Task.Run(() => TorrentGetAsync(fields, ids)).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -166,9 +165,10 @@ namespace Transmission.API.RPC
         /// </summary>
         /// <param name="ids">Torrents id</param>
         /// <param name="deleteData">Remove data</param>
+        [Obsolete("Use TorrentRemoveAsync instead")]
         public void TorrentRemove(object[] ids, bool deleteData = false)
         {
-            TorrentRemoveAsync(ids, deleteData).WaitAndUnwrapException();
+            Task.Run(() => TorrentRemoveAsync(ids, deleteData)).GetAwaiter().GetResult();
         }
 
         #region Torrent Start
@@ -176,17 +176,19 @@ namespace Transmission.API.RPC
         /// Start torrents (API: torrent-start)
         /// </summary>
         /// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
+        [Obsolete("Use TorrentStartAsync instead")]
         public void TorrentStart(object[] ids)
         {
-            TorrentStartAsync(ids).WaitAndUnwrapException();
+            Task.Run(() => TorrentStartAsync(ids)).GetAwaiter().GetResult();
         }
 
         /// <summary>
         /// Start recently active torrents (API: torrent-start)
         /// </summary>
+        [Obsolete("Use TorrentStartAsync instead")]
         public void TorrentStart()
         {
-            TorrentStartAsync().WaitAndUnwrapException();
+            Task.Run(() => TorrentStartAsync()).GetAwaiter().GetResult();
         }
         #endregion
 
@@ -196,17 +198,19 @@ namespace Transmission.API.RPC
         /// Start now torrents (API: torrent-start-now)
         /// </summary>
         /// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
+        [Obsolete("Use TorrentStartNowAsync instead")]
         public void TorrentStartNow(object[] ids)
         {
-            TorrentStartNowAsync(ids).WaitAndUnwrapException();
+            Task.Run(() => TorrentStartNowAsync(ids)).GetAwaiter().GetResult();
         }
 
         /// <summary>
         /// Start now recently active torrents (API: torrent-start-now)
         /// </summary>
+        [Obsolete("Use TorrentStartNowAsync instead")]
         public void TorrentStartNow()
         {
-            TorrentStartNowAsync().WaitAndUnwrapException();
+            Task.Run(() => TorrentStartNowAsync()).GetAwaiter().GetResult();
         }
         #endregion
 
@@ -215,30 +219,34 @@ namespace Transmission.API.RPC
         /// Stop torrents (API: torrent-stop)
         /// </summary>
         /// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
+        [Obsolete("Use TorrentStopAsync instead")]
         public void TorrentStop(object[] ids)
         {
-            TorrentStopAsync(ids).WaitAndUnwrapException();
+            Task.Run(() => TorrentStopAsync(ids)).GetAwaiter().GetResult();
         }
 
         /// <summary>
         /// Stop recently active torrents (API: torrent-stop)
         /// </summary>
+        [Obsolete("Use TorrentStopAsync instead")]
         public void TorrentStop()
         {
-            TorrentStopAsync().WaitAndUnwrapException();
+            Task.Run(() => TorrentStopAsync()).GetAwaiter().GetResult();
         }
         #endregion
 
         #region Torrent Reannounce
 
-        void ITransmissionClient.TorrentReannounceAsync()
+        [Obsolete("Use TorrentReannounceAsync instead")]
+        void ITransmissionClient.TorrentReannounce()
         {
-            TorrentReannounceAsync().WaitAndUnwrapException();
+            Task.Run(() => TorrentReannounceAsync()).GetAwaiter().GetResult();
         }
 
-        void ITransmissionClient.TorrentReannounceAsync(object[] ids)
+        [Obsolete("Use TorrentReannounceAsync instead")]
+        void ITransmissionClient.TorrentReannounce(object[] ids)
         {
-            TorrentReannounceAsync(ids).WaitAndUnwrapException();
+            Task.Run(() => TorrentReannounceAsync(ids)).GetAwaiter().GetResult();
         }
 
         #endregion
@@ -248,67 +256,72 @@ namespace Transmission.API.RPC
         /// Verify torrents (API: torrent-verify)
         /// </summary>
         /// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
+        [Obsolete("Use TorrentVerifyAsync instead")]
         public void TorrentVerify(object[] ids)
         {
-            TorrentVerifyAsync(ids).WaitAndUnwrapException();
+            Task.Run(() => TorrentVerifyAsync(ids)).GetAwaiter().GetResult();
         }
-        
 
         /// <summary>
         /// Verify recently active torrents (API: torrent-verify)
         /// </summary>
+        [Obsolete("Use TorrentVerifyAsync instead")]
         public void TorrentVerify()
         {
-            TorrentVerifyAsync().WaitAndUnwrapException();
+            Task.Run(() => TorrentVerifyAsync()).GetAwaiter().GetResult();
         }
         #endregion
-        
+
+        [Obsolete("Use GroupSetAsync instead")]
         void ITransmissionClient.GroupSet(Group group)
         {
-            GroupSet(group).WaitAndUnwrapException();
+            Task.Run(() => GroupSet(group)).GetAwaiter().GetResult();
         }
 
+        [Obsolete("Use GroupGetAsync instead")]
         GroupsInfo ITransmissionClient.GroupGet(string groupName)
         {
-            var task = GroupGet(groupName);
-            task.WaitAndUnwrapException();
-            return task.Result;
+            return Task.Run(() => GroupGet(groupName)).GetAwaiter().GetResult();
         }
 
         /// <summary>
         /// Move torrents in queue on top (API: queue-move-top)
         /// </summary>
         /// <param name="ids">Torrents id</param>
+        [Obsolete("Use TorrentQueueMoveTopAsync instead")]
         public void TorrentQueueMoveTop(object[] ids)
         {
-            TorrentQueueMoveTopAsync(ids).WaitAndUnwrapException();
+            Task.Run(() => TorrentQueueMoveTopAsync(ids)).GetAwaiter().GetResult();
         }
 
         /// <summary>
         /// Move up torrents in queue (API: queue-move-up)
         /// </summary>
         /// <param name="ids"></param>
+        [Obsolete("Use TorrentQueueMoveUpAsync instead")]
         public void TorrentQueueMoveUp(object[] ids)
         {
-            TorrentQueueMoveUpAsync(ids).WaitAndUnwrapException();
+            Task.Run(() => TorrentQueueMoveUpAsync(ids)).GetAwaiter().GetResult();
         }
 
         /// <summary>
         /// Move down torrents in queue (API: queue-move-down)
         /// </summary>
         /// <param name="ids"></param>
+        [Obsolete("Use TorrentQueueMoveDownAsync instead")]
         public void TorrentQueueMoveDown(object[] ids)
         {
-            TorrentQueueMoveDownAsync(ids).WaitAndUnwrapException();
+            Task.Run(() => TorrentQueueMoveDownAsync(ids)).GetAwaiter().GetResult();
         }
 
         /// <summary>
         /// Move torrents to bottom in queue  (API: queue-move-bottom)
         /// </summary>
         /// <param name="ids"></param>
+        [Obsolete("Use TorrentQueueMoveBottomAsync instead")]
         public void TorrentQueueMoveBottom(object[] ids)
         {
-            TorrentQueueMoveBottomAsync(ids).WaitAndUnwrapException();
+            Task.Run(() => TorrentQueueMoveBottomAsync(ids)).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -317,9 +330,10 @@ namespace Transmission.API.RPC
         /// <param name="ids">Torrent ids</param>
         /// <param name="location">The new torrent location</param>
         /// <param name="move">Move from previous location</param>
+        [Obsolete("Use TorrentSetLocationAsync instead")]
         public void TorrentSetLocation(object[] ids, string location, bool move)
         {
-            TorrentSetLocationAsync(ids, location, move).WaitAndUnwrapException();
+            Task.Run(() => TorrentSetLocationAsync(ids, location, move)).GetAwaiter().GetResult();
         }
 
         /// <summary>
@@ -328,11 +342,10 @@ namespace Transmission.API.RPC
         /// <param name="id">The torrent whose path will be renamed</param>
         /// <param name="path">The path to the file or folder that will be renamed</param>
         /// <param name="name">The file or folder's new name</param>
+        [Obsolete("Use TorrentRenamePathAsync instead")]
 		public RenameTorrentInfo TorrentRenamePath(int id, string path, string name)
         {
-            var task = TorrentRenamePathAsync(id, path, name);
-            task.WaitAndUnwrapException();
-            return task.Result;
+            return Task.Run(() => TorrentRenamePathAsync(id, path, name)).GetAwaiter().GetResult();
         }
 
         #endregion
@@ -342,33 +355,30 @@ namespace Transmission.API.RPC
         /// See if your incoming peer port is accessible from the outside world (API: port-test)
         /// </summary>
         /// <returns>Accessible state</returns>
+        [Obsolete("Use PortTestAsync instead")]
         public PortTest PortTest()
         {
-            var task = PortTestAsync();
-            task.WaitAndUnwrapException();
-            return task.Result;
+            return Task.Run(() => PortTestAsync()).GetAwaiter().GetResult();
         }
 
         /// <summary>
         /// Update blocklist (API: blocklist-update)
         /// </summary>
         /// <returns>Blocklist size</returns>
+        [Obsolete("Use BlocklistUpdateAsync instead")]
         public int BlocklistUpdate()
         {
-            var task = BlocklistUpdateAsync();
-            task.WaitAndUnwrapException();
-            return task.Result;
+            return Task.Run(() => BlocklistUpdateAsync()).GetAwaiter().GetResult();
         }
 
         /// <summary>
         /// Get free space is available in a client-specified folder.
         /// </summary>
         /// <param name="path">The directory to query</param>
+        [Obsolete("Use FreeSpaceAsync instead")]
         public FreeSpace FreeSpace(string path)
         {
-            var task = FreeSpaceAsync(path);
-            task.WaitAndUnwrapException();
-            return task.Result;
+            return Task.Run(() => FreeSpaceAsync(path)).GetAwaiter().GetResult();
         }
         #endregion
     }
