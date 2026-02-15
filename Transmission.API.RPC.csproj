@@ -4,7 +4,7 @@
         <TargetFramework>net10.0</TargetFramework>
         <OutputType>Library</OutputType>
         <PackageIcon>Transmission.png</PackageIcon>
-        <Version>4.1.5</Version>
+        <Version>4.1.6</Version>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageId>Transmission.API.RPC.NET</PackageId>
@@ -17,8 +17,13 @@
         <RepositoryUrl>https://github.com/LobanovAnton/Transmission.API.RPC.NET</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>
+4.1.6
+• Fix sync method deadlock caused by SynchronizationContext in UI applications and mark them [Obsolete] 
+If you want to call an asynchronous method synchronously, here is the recommended example: 
+Statistic stat = GetSessionStatisticAsync().GetAwaiter().GetResult();
+
 4.1.5
-• Added CancellationToken parameter to Async methods. 
+• Added CancellationToken parameter to Async methods.
 If you don't need cancellation dont pass it or pass CancellationToken.None)
 
 4.1.4

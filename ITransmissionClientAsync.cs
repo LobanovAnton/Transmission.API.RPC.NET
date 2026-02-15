@@ -26,6 +26,7 @@ namespace Transmission.API.RPC
         /// Get free space is available in a client-specified folder.
         /// </summary>
         /// <param name="path">The directory to query</param>
+        /// <param name="cancellationToken"></param>
         Task<FreeSpace> FreeSpaceAsync(string path, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -50,6 +51,7 @@ namespace Transmission.API.RPC
         /// Set information to current session (API: session-set)
         /// </summary>
         /// <param name="settings">New session settings</param>
+        /// <param name="cancellationToken"></param>
         Task SetSessionSettingsAsync(SessionSettings settings, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -63,6 +65,7 @@ namespace Transmission.API.RPC
         /// </summary>
         /// <param name="fields">Fields of torrents</param>
         /// <param name="ids">IDs of torrents (null or empty for get all torrents)</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>Torrents info</returns>
         Task<TransmissionTorrents> TorrentGetAsync(string[] fields, object[] ids, CancellationToken cancellationToken = default);
 
@@ -70,24 +73,28 @@ namespace Transmission.API.RPC
         /// Move torrents to bottom in queue  (API: queue-move-bottom)
         /// </summary>
         /// <param name="ids"></param>
+        /// <param name="cancellationToken"></param>
         Task TorrentQueueMoveBottomAsync(object[] ids, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Move down torrents in queue (API: queue-move-down)
         /// </summary>
         /// <param name="ids"></param>
+        /// <param name="cancellationToken"></param>
         Task TorrentQueueMoveDownAsync(object[] ids, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Move torrents in queue on top (API: queue-move-top)
         /// </summary>
         /// <param name="ids">Torrents id</param>
+        /// <param name="cancellationToken"></param>
         Task TorrentQueueMoveTopAsync(object[] ids, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Move up torrents in queue (API: queue-move-up)
         /// </summary>
         /// <param name="ids"></param>
+        /// <param name="cancellationToken"></param>
         Task TorrentQueueMoveUpAsync(object[] ids, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -95,6 +102,7 @@ namespace Transmission.API.RPC
         /// </summary>
         /// <param name="ids">Torrents id</param>
         /// <param name="deleteData">Remove local data</param>
+        /// <param name="cancellationToken"></param>
         Task TorrentRemoveAsync(object[] ids, bool deleteData = false, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -103,12 +111,14 @@ namespace Transmission.API.RPC
         /// <param name="id">The torrent whose path will be renamed</param>
         /// <param name="path">The path to the file or folder that will be renamed</param>
         /// <param name="name">The file or folder's new name</param>
+        /// <param name="cancellationToken"></param>
         Task<RenameTorrentInfo> TorrentRenamePathAsync(int id, string path, string name, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Set torrent params (API: torrent-set)
         /// </summary>
         /// <param name="settings">Torrent settings</param>
+        /// <param name="cancellationToken"></param>
         Task TorrentSetAsync(TorrentSettings settings, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -117,6 +127,7 @@ namespace Transmission.API.RPC
         /// <param name="ids">Torrent ids</param>
         /// <param name="location">The new torrent location</param>
         /// <param name="move">Move from previous location</param>
+        /// <param name="cancellationToken"></param>
         Task TorrentSetLocationAsync(object[] ids, string location, bool move, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -128,6 +139,7 @@ namespace Transmission.API.RPC
         /// Start torrents (API: torrent-start)
         /// </summary>
         /// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
+        /// <param name="cancellationToken"></param>
         Task TorrentStartAsync(object[] ids, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -139,6 +151,7 @@ namespace Transmission.API.RPC
         /// Start now torrents (API: torrent-start-now)
         /// </summary>
         /// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
+        /// <param name="cancellationToken"></param>
         Task TorrentStartNowAsync(object[] ids, CancellationToken cancellationToken = default);
 
         /// <summary>
@@ -150,6 +163,7 @@ namespace Transmission.API.RPC
         /// Stop torrents (API: torrent-stop)
         /// </summary>
         /// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
+        /// <param name="cancellationToken"></param>
         Task TorrentStopAsync(object[] ids, CancellationToken cancellationToken = default);
 
         Task TorrentReannounceAsync(CancellationToken cancellationToken = default);
@@ -165,6 +179,7 @@ namespace Transmission.API.RPC
         /// Verify torrents (API: torrent-verify)
         /// </summary>
         /// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
+        /// <param name="cancellationToken"></param>
         Task TorrentVerifyAsync(object[] ids, CancellationToken cancellationToken = default);
 
         Task GroupSet(Group group, CancellationToken cancellationToken = default);

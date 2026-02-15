@@ -1,4 +1,5 @@
-﻿using Transmission.API.RPC.Entity;
+﻿using System;
+using Transmission.API.RPC.Entity;
 using Transmission.API.RPC.Params;
 
 namespace Transmission.API.RPC
@@ -6,6 +7,7 @@ namespace Transmission.API.RPC
     /// <summary>
     /// Interface for transmission client
     /// </summary>
+    [Obsolete("Use ITransmissionClientAsync instead")]
     public interface ITransmissionClient
     {
         /// <summary>
@@ -163,10 +165,17 @@ namespace Transmission.API.RPC
         /// </summary>
         /// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
         void TorrentStop(object[] ids);
-        
-        void TorrentReannounceAsync();
 
-        void TorrentReannounceAsync(object[] ids);
+        /// <summary>
+        /// Reannounce recently active torrents (API: torrent-reannounce)
+        /// </summary>
+        void TorrentReannounce();
+
+        /// <summary>
+        /// Reannounce torrents (API: torrent-reannounce)
+        /// </summary>
+        /// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
+        void TorrentReannounce(object[] ids);
 
         /// <summary>
         /// Verify recently active torrents (API: torrent-verify)
@@ -178,7 +187,7 @@ namespace Transmission.API.RPC
         /// </summary>
         /// <param name="ids">A list of torrent id numbers, sha1 hash strings, or both</param>
         void TorrentVerify(object[] ids);
-        
+
         void GroupSet(Group group);
 
         GroupsInfo GroupGet(string groupName);
