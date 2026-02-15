@@ -27,7 +27,7 @@ namespace Transmission.API.RPC
 				Method = Methods.SESSION_CLOSE
 			};
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -43,7 +43,7 @@ namespace Transmission.API.RPC
 				Parameters = settings
 			};
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -57,7 +57,7 @@ namespace Transmission.API.RPC
 				Method = Methods.SESSION_STATS
 			};
 
-			var response = await SendRequestAsync(request, cancellationToken);
+			var response = await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 			var result = response.Deserialize<Statistic>();
 			return result;
 		}
@@ -74,7 +74,7 @@ namespace Transmission.API.RPC
 				Parameters = new Parameters { { ApiFields.FIELDS, fields } }
 			};
 
-			var response = await SendRequestAsync(request, cancellationToken);
+			var response = await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 			var result = response.Deserialize<SessionInfo>();
 			return result;
 		}
@@ -98,7 +98,7 @@ namespace Transmission.API.RPC
 				Parameters = torrent
 			};
 
-			var response = await SendRequestAsync(request, cancellationToken);
+			var response = await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 			var result = response.Deserialize<AddTorrentInfo>();
 			return result;
 		}
@@ -116,7 +116,7 @@ namespace Transmission.API.RPC
 		        Parameters = settings
 	        };
 
-	        await SendRequestAsync(request, cancellationToken);
+	        await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace Transmission.API.RPC
 				Parameters = arguments
 			};
 
-			var response = await SendRequestAsync(request, cancellationToken);
+			var response = await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 			var result = response.Deserialize<TransmissionTorrents>();
 			return result;
 		}
@@ -162,7 +162,7 @@ namespace Transmission.API.RPC
 		        }
 	        };
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 
 		#region Torrent Start
@@ -180,7 +180,7 @@ namespace Transmission.API.RPC
 				Parameters = new Parameters { { ApiFields.IDS, ids } }
 			};
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -194,7 +194,7 @@ namespace Transmission.API.RPC
 				Parameters = new Parameters { { ApiFields.IDS, ApiFields.RECENTLY_ACTIVE } }
 			};
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 
 		#endregion
@@ -214,7 +214,7 @@ namespace Transmission.API.RPC
 				Parameters = new Parameters { { ApiFields.IDS, ids } }
 			};
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -228,7 +228,7 @@ namespace Transmission.API.RPC
 				Parameters = new Parameters { { ApiFields.IDS, ApiFields.RECENTLY_ACTIVE } }
 			};
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 
 		#endregion
@@ -248,7 +248,7 @@ namespace Transmission.API.RPC
 				Parameters = new Parameters { { ApiFields.IDS, ids } }
 			};
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -262,7 +262,7 @@ namespace Transmission.API.RPC
 				Parameters = new Parameters { { ApiFields.IDS, ApiFields.RECENTLY_ACTIVE } }
 			};
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 		
 		#endregion
@@ -277,7 +277,7 @@ namespace Transmission.API.RPC
 				Parameters = new Parameters { { ApiFields.IDS, ids } }
 			};
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 
 		public async Task TorrentReannounceAsync(CancellationToken cancellationToken = default)
@@ -288,7 +288,7 @@ namespace Transmission.API.RPC
 				Parameters = new Parameters { { ApiFields.IDS, ApiFields.RECENTLY_ACTIVE } }
 			};
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 		
 		#endregion
@@ -308,7 +308,7 @@ namespace Transmission.API.RPC
 				Parameters = new Parameters { { ApiFields.IDS, ids } }
 			};
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -322,7 +322,7 @@ namespace Transmission.API.RPC
 				Parameters = new Parameters { { ApiFields.IDS, ApiFields.RECENTLY_ACTIVE } }
 			};
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 		#endregion
 
@@ -339,7 +339,7 @@ namespace Transmission.API.RPC
 				Parameters = new Parameters { { ApiFields.IDS, ids } }
 			};
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -355,7 +355,7 @@ namespace Transmission.API.RPC
 				Parameters = new Parameters { { ApiFields.IDS, ids } }
 			};
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -371,7 +371,7 @@ namespace Transmission.API.RPC
 				Parameters = new Parameters { { ApiFields.IDS, ids } }
 			};
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -387,7 +387,7 @@ namespace Transmission.API.RPC
 				Parameters = new Parameters { { ApiFields.IDS, ids } }
 			};
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -410,7 +410,7 @@ namespace Transmission.API.RPC
 				}
 			};
 
-			await SendRequestAsync(request, cancellationToken);
+			await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 		}
 
 		/// <summary>
@@ -433,7 +433,7 @@ namespace Transmission.API.RPC
 				}
 			};
 
-			var response = await SendRequestAsync(request, cancellationToken);
+			var response = await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 			var result = response.Deserialize<RenameTorrentInfo>();
 			return result;
 		}
@@ -453,7 +453,7 @@ namespace Transmission.API.RPC
 				Method = Methods.PORT_TEST
 			};
 
-			var response = await SendRequestAsync(request, cancellationToken);
+			var response = await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 
 			var data = response.Deserialize<PortTest>();
 			return data;
@@ -470,7 +470,7 @@ namespace Transmission.API.RPC
 				Method = Methods.BLOCKLIST_UPDATE
 			};
 
-			var response = await SendRequestAsync(request, cancellationToken);
+			var response = await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 
 			var data = response.Deserialize<BlockList>();
 			return data.BlockListSize;
@@ -489,7 +489,7 @@ namespace Transmission.API.RPC
 				Parameters = new Parameters { { ApiFields.PATH, path } }
 			};
 
-			var response = await SendRequestAsync(request, cancellationToken);
+			var response = await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 
 			var data = response.Deserialize<FreeSpace>();
 			return data;
@@ -505,7 +505,7 @@ namespace Transmission.API.RPC
 		        Parameters = group
 	        };
 
-	        await SendRequestAsync(request, cancellationToken);
+	        await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task<GroupsInfo> GroupGet(string groupName = null, CancellationToken cancellationToken = default)
@@ -516,7 +516,7 @@ namespace Transmission.API.RPC
 		        Parameters = new Parameters { { TorrentFields.NAME, groupName } }
 	        };
 	        
-	        var response = await SendRequestAsync(request, cancellationToken);
+	        var response = await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 
 	        GroupsInfo groupsInfo = response.Deserialize<GroupsInfo>();
 	        return groupsInfo;
@@ -526,7 +526,7 @@ namespace Transmission.API.RPC
         {
             TransmissionResponse result = new TransmissionResponse();
 
-            request.Id = ++CurrentTag;
+            request.Id = Interlocked.Increment(ref _currentTag);
 
             //Prepare http web request
             using HttpClient httpClient = HttpClientFactory.CreateClient();
@@ -540,12 +540,12 @@ namespace Transmission.API.RPC
             httpRequest.Content = JsonContent.Create(request, SourceGenerationContext.Default.TransmissionRequest, JsonMediaType);
 
             //Send request and prepare response
-            using var httpResponse = await httpClient.SendAsync(httpRequest, cancellationToken);
+            using var httpResponse = await httpClient.SendAsync(httpRequest, cancellationToken).ConfigureAwait(false);
 
             if (httpResponse.IsSuccessStatusCode)
             {
-	            result = (TransmissionResponse)await httpResponse.Content.ReadFromJsonAsync(typeof(TransmissionResponse), 
-		            SourceGenerationContext.Default, cancellationToken);
+	            result = (TransmissionResponse)await httpResponse.Content.ReadFromJsonAsync(typeof(TransmissionResponse),
+		            SourceGenerationContext.Default, cancellationToken).ConfigureAwait(false);
 
 	            if (result == null)
 		            throw new JsonException("Transmission response is null");
@@ -563,7 +563,7 @@ namespace Transmission.API.RPC
 		            else
 			            throw new Exception("Session ID Error");
 
-		            result = await SendRequestAsync(request, cancellationToken);
+		            result = await SendRequestAsync(request, cancellationToken).ConfigureAwait(false);
 	            }
             }
             else

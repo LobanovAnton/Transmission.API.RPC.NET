@@ -18,7 +18,9 @@
         <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>
 4.1.6
-• Fix sync method deadlock caused by SynchronizationContext in UI applications and mark them [Obsolete]
+• Fix sync method deadlock caused by SynchronizationContext in UI applications and mark them [Obsolete] 
+If you want to call an asynchronous method synchronously, here is the recommended example: 
+Statistic stat = GetSessionStatisticAsync().GetAwaiter().GetResult();
 
 4.1.5
 • Added CancellationToken parameter to Async methods.
