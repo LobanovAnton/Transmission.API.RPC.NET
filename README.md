@@ -44,7 +44,7 @@ How to use
 
 Install Nuget Package: `PM> Install-Package Transmission.API.RPC.NET`
 
-Example from TransmissionNet project:
+[Example from TransmissionNet project](https://github.com/LobanovAnton/TransmissionNet)
 
 ```C#
 using Transmission.API.RPC;
