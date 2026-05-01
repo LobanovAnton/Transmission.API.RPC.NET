@@ -18,7 +18,8 @@
         <RepositoryType>git</RepositoryType>
         <PackageReleaseNotes>
 4.1.7
-• Update Readme.md
+• Update Readme.md 
+• This version only contains an updated readme.md file, and it contains a link to a project that shows how to use it. Please download it and use it absolutely free.
 
 4.1.6
 • Fix sync method deadlock caused by SynchronizationContext in UI applications and mark them [Obsolete] 
