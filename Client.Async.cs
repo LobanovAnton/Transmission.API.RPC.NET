@@ -531,7 +531,7 @@ namespace Transmission.API.RPC
             //Prepare http web request
             using HttpClient httpClient = HttpClientFactory.CreateClient();
 
-            HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, Url);
+            using HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, Url);
             httpRequest.Headers.Add("X-Transmission-Session-Id", SessionId);
 
             if (_needAuthorization)
